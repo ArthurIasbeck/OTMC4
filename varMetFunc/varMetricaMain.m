@@ -4,7 +4,7 @@ addpath('..');
 
 % Parâmetros pra execução do algorítmo
 n = 3;
-numGrad = 0; 
+numGrad = 1; 
 x0 = [0, 0, 0]';
 tol = 1e-4;
 theta = 0;
