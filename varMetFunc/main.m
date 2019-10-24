@@ -17,7 +17,7 @@ f = @(x) 4250*x(1).^2 - 1000*x(1)*x(2) - 2500*x(1)*x(3) - 1000*x(1) + ...
 
 % Gradiente analítico -----------------------------------------------------
 % Definido a partir de um arquivo 
-df = @gradFile;
+% df = @gradFile;
 
 % Definido diretamente
 df = @(x) [8500*x(1) - 1000*x(2) - 2500*x(3) - 1000

@@ -1,5 +1,5 @@
 % Implementação do Método da Variável Métrica =============================
-function [xOpt, fOpt, nVal, k, alfaValues] = varMet(f, x0, df, tol, ...
+function [xOpt, fOpt, nVal, k, alfaValues] = varMetCon(f, x0, df, tol, ...
     theta, h)
 
 % Verificação de erros na entrada
@@ -35,10 +35,14 @@ alfaValues = zeros(1,1);
 k = 1;
 nVal = 0;
 H = eye(n);
+rp = 0.1;
 
 while 1
+    % Determinação da penalidade relacionada às restrições
+    phi = @(x) f(x) + penalty(x, rp);
+    
     % Reduzir a dimensão do problema de otimização
-    g = @(alfa) f(x0 - alfa*H*df(x0));
+    g = @(alfa) phi(x0 - alfa*H*df(x0));
     
     % Resolver o problema de otimização uni-dimensional
     [alfaOpt,~,nVal1] = aureaSec(g,-1,1,1e-4);
@@ -79,6 +83,9 @@ while 1
     % Atualizar variáveis para a próxima iteração
     x0 = x;
     k = k + 1;
+    rp = rp*10;
+    
+    [cp x(1) x(2)]
 end
 
 xOpt = x;
@@ -135,3 +142,11 @@ end
 
 xOpt = (alfa+beta)/2;
 fOpt = f(xOpt);
+
+% Cálculo das penalidades =================================================
+function p = penalty(x, rp)
+
+[g, h] = constFile(x);
+penG = rp*sum(max(0,g));
+penH = rp*sum(h.^2);
+p = penG + penH;
