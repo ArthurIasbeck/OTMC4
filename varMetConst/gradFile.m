@@ -1,5 +1,6 @@
+%#ok<*INUSD>
 function df = gradFile(x)
 
-df = [8500*x(1) - 1000*x(2) - 2500*x(3) - 1000
-      3000*x(2) - 1000*x(1) - 500*x(3) - 2000
-      11500*x(3) - 500*x(2) - 2500*x(1) - 3000];
+% O gradiente da função objetivo, quando conhecido, deve ser inserido aqui.
+% Caso o mesmo não possa ser determinado, basta inserir 'df = []'.
+df = [];

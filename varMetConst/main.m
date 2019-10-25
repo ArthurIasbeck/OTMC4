@@ -1,28 +1,32 @@
-init;
+% Configurações prévias ===================================================
+% Antes de executar a função principal 'main.m', é preciso definir a função
+% objetivo, seu gradiente (caso haja), e as restrições (caso haja). Para
+% tanto basta editar os arquivos 'funcFile.m', 'gradFile.m', e
+% 'constFile.m'
 
-% Inicialização do problema ===============================================
-% Palpite inicial para a solução ------------------------------------------
-x0 = [0, 0]';
-% x0 = rand(2,1);
-
-% Ordem do problema -------------------------------------------------------
-n = length(x0); 
-
-% Função objetivo ---------------------------------------------------------
-f = @(x) 1/3*(x(1) + 1).^3 + x(2);
-
-% Gradiente da função objetivo --------------------------------------------
-df = @(x) [(x(1) + 1).^2 + x(2)
-           1/3*(x(1) + 1).^3 + 1];
+init; % Inicialização do ambiente de trabalho
 
 % Resolvendo o problema de otimização =====================================
-[xOpt, fOpt, nVal, k, alfaValues] = varMetConst(f, x0, df);
+[xOpt, fOpt, nVal, k, alfaValues] = varMet();
 
 % Apresentando os resultados ==============================================
-for i = 1:n
+for i = 1:length(xOpt)
     fprintf(['x',num2str(i),'* = %.4f\n'], xOpt(i))
 end
 
 fprintf('f(x*) = %.4f\n', fOpt)
 fprintf('Número de avaliações da função objetivo: %d\n', nVal)
 fprintf('Número de iterações: %d\n', k)
+
+% Notas ===================================================================
+% A seguir é introduzida a forma completa da função 'varMet'
+% [xOpt, fOpt, nVal, k, alfaValues] = varMet(x0, theta, rp0, rpInc, tol, h)
+
+% Para os parâmetros não informados pelo usuário serão adotados os valores
+% padrão
+% x0 = [0 0 0 ... 0]
+% theta = 1
+% rp0 = 1
+% rpInc = 10
+% tol = 1e-5
+% h = 1e-10
