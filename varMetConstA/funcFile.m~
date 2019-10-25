@@ -1,0 +1,8 @@
+function f = funcFile(x)
+
+fObj = 1/3*(x(1) + 1).^3 + x(2);
+
+g1 = -x(1) + 1;
+g2 = -x(2);
+
+f = fObj - rp

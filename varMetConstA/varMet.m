@@ -1,11 +1,10 @@
 % Implementação do Método da Variável Métrica =============================
-function [xOpt, fOpt, nVal, k, alfaValues] = varMetConst(fObj, x0, df, tol, ...
+function [xOpt, fOpt, nVal, k, alfaValues] = varMet(f, x0, df, tol, ...
     theta, h)
 
-% Definição da nova função objetivo
-global rp;
-rp = 0.1;
-f = @(x) fObj(x) + penalty(x);
+global rp
+
+rp = 0.01;
 
 % Verificação de erros na entrada
 if nargin < 2 || isempty(f) || isempty(x0)
@@ -46,7 +45,7 @@ while 1
     g = @(alfa) f(x0 - alfa*H*df(x0));
     
     % Resolver o problema de otimização uni-dimensional
-    [alfaOpt,~,nVal1D] = aureaSec(g,-1,1,1e-4);
+    [alfaOpt,~,nVal1] = aureaSec(g,-1,1,1e-4);
     
     % Atualizar a solução ótima
     x = x0 - alfaOpt*H*df(x0);
@@ -54,9 +53,9 @@ while 1
     % Armazenar dados de execução
     alfaValues(k) = alfaOpt;
     if numGrad
-        nVal = nVal + nVal1D + 1;
+        nVal = nVal + nVal1 + 1;
     else
-        nVal = nVal + nVal1D + 2*n;
+        nVal = nVal + nVal1 + 2*n;
     end
     
     % OBS : Lembre-se que é necessária a computação do gradiente para
@@ -84,9 +83,7 @@ while 1
     % Atualizar variáveis para a próxima iteração
     x0 = x;
     k = k + 1;
-    rp = rp*10;
-    
-    [cp x(1) x(2)]
+    rp = rp*3;
 end
 
 xOpt = x;
@@ -143,12 +140,3 @@ end
 
 xOpt = (alfa+beta)/2;
 fOpt = f(xOpt);
-
-% Cálculo das penalidades =================================================
-function p = penalty(x)
-
-global rp
-[g, h] = constFile(x);
-penG = rp*sum(max(0,g).^2);
-penH = rp*sum(h.^2);
-p = penG + penH;

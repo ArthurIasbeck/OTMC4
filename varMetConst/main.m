@@ -2,8 +2,8 @@ init;
 
 % Inicialização do problema ===============================================
 % Palpite inicial para a solução ------------------------------------------
-% x0 = [0, 0]';
-x0 = rand(2,1);
+x0 = [0, 0]';
+% x0 = rand(2,1);
 
 % Ordem do problema -------------------------------------------------------
 n = length(x0); 
@@ -11,8 +11,12 @@ n = length(x0);
 % Função objetivo ---------------------------------------------------------
 f = @(x) 1/3*(x(1) + 1).^3 + x(2);
 
+% Gradiente da função objetivo --------------------------------------------
+df = @(x) [(x(1) + 1).^2 + x(2)
+           1/3*(x(1) + 1).^3 + 1];
+
 % Resolvendo o problema de otimização =====================================
-[xOpt, fOpt, nVal, k, alfaValues] = varMetConst(f, x0);
+[xOpt, fOpt, nVal, k, alfaValues] = varMetConst(f, x0, df);
 
 % Apresentando os resultados ==============================================
 for i = 1:n
