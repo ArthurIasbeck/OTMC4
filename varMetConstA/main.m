@@ -36,7 +36,7 @@ f = @funcFile;
 % [xOpt, fOpt, nVal, k, alfaValues] = varMet(f, x0, df, tol, theta);
 % [xOpt, fOpt, nVal, k, alfaValues] = varMet(f, x0, df, tol);
 % [xOpt, fOpt, nVal, k, alfaValues] = varMet(f, x0, df);
-[xOpt, fOpt, nVal, k, alfaValues] = varMet(f, x0);
+[xOpt, fOpt, nVal, k, alfaValues] = varMet(x0);
 
 % Apresentando os resultados ==============================================
 for i = 1:n

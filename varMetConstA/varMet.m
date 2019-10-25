@@ -1,23 +1,25 @@
+% =========================================================================
+% =========================================================================
 % Implementação do Método da Variável Métrica =============================
-function [xOpt, fOpt, nVal, k, alfaValues] = varMet(f, x0, df, tol, ...
+% =========================================================================
+% =========================================================================
+function [xOpt, fOpt, nVal, k, alfaValues] = varMet(x0, df, tol, ...
     theta, h)
 
-global rp
-
-rp = 0.01;
+f = @(x) fObjConst(x);
 
 % Verificação de erros na entrada
-if nargin < 2 || isempty(f) || isempty(x0)
-    disp('Informe x0 e f!');
+if nargin < 1 || isempty(x0)
+    disp('Informe x0!');
     return;
 end
 
 % Verificação da entrada do gradiente
-if nargin < 3 || isempty(df)
+if nargin < 2 || isempty(df)
     if nargin < 6 || isempty(h)
         df = @(x) grad(f,x);
     else
-        f = @(x) grad(f,x,h);
+        df = @(x) grad(f,x,h);
     end
     numGrad = 1;
 else
@@ -39,6 +41,8 @@ alfaValues = zeros(1,1);
 k = 1;
 nVal = 0;
 H = eye(n);
+global rp
+rp = 1;
 
 while 1
     % Reduzir a dimensão do problema de otimização
@@ -83,13 +87,17 @@ while 1
     % Atualizar variáveis para a próxima iteração
     x0 = x;
     k = k + 1;
-    rp = rp*3;
+    rp = rp*10;
 end
 
 xOpt = x;
 fOpt = f(xOpt);
 
+% =========================================================================
+% =========================================================================
 % Obtenção numérica do gradiente ==========================================
+% =========================================================================
+% =========================================================================
 function df = grad(f, x, h)
 
 % Definindo valores padrão
@@ -106,7 +114,11 @@ for i = 1:n
     df(i) = (f(dx) - f(x))/h;
 end
 
+% =========================================================================
+% =========================================================================
 % Implementação do Método da Seção Áurea ==================================
+% =========================================================================
+% =========================================================================
 function [xOpt, fOpt, k] = aureaSec(f,a,b,tol) 
 tal = 0.618;
 
@@ -140,3 +152,15 @@ end
 
 xOpt = (alfa+beta)/2;
 fOpt = f(xOpt);
+
+% =========================================================================
+% =========================================================================
+% Função objetivo penalizada ==============================================
+% =========================================================================
+% =========================================================================
+function F = fObjConst(x)
+
+global rp
+fObj = funcFile(x);
+P = constFile(x);
+F = fObj + rp*P;
