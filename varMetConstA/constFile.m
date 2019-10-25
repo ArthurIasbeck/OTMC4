@@ -1,11 +1,8 @@
-function P = constFile(x)
+function [g, h] = constFile(x)
 
+% Cada linha da matriz 'g' representa uma restrição de desigualdade
 g = [-x(1) + 1;
 	 -x(2)];
- 
-h = [];
- 
-Pg = sum(max(0,g).^2);
-Ph = sum(h.^2);
 
-P = Pg + Ph;
+% Cada linha da matriz 'h' representa uma restrição de igualdade
+h = [];

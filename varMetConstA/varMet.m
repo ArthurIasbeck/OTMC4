@@ -3,35 +3,60 @@
 % Implementação do Método da Variável Métrica =============================
 % =========================================================================
 % =========================================================================
-function [xOpt, fOpt, nVal, k, alfaValues] = varMet(x0, df, tol, ...
-    theta, h)
+function [xOpt, fOpt, nVal, k, alfaValues] = varMet(x0, theta, rp0, ...
+    rpInc, tol, h)
 
-f = @(x) fObjConst(x);
-
-% Verificação de erros na entrada
+% Verificação do palpite inicial fornecido pelo usuário
+n = getOrder;
 if nargin < 1 || isempty(x0)
-    disp('Informe x0!');
-    return;
+    x0 = zeros(n,1);
+else
+    % Verificando a consistência entre x0 e a função objetivo
+    if n ~= length(x0)
+        error('O tamanho de x0 deve ser igual à ordem do problema.');
+    end
 end
 
-% Verificação da entrada do gradiente
-if nargin < 2 || isempty(df)
-    if nargin < 6 || isempty(h)
+% Verificando entradas da função e definindo valores padrão
+if nargin < 2 || isempty(theta)
+    theta = 1;
+end
+if nargin < 3 || isempty(rp0)
+    rp0 = 1;
+end
+if nargin < 4 || isempty(rpInc)
+    rpInc = 10;
+end
+if nargin < 5 || isempty(tol)
+    tol = 1e-5;
+end
+if nargin < 6 || isempty(h)
+    h = 1e-10;
+end
+
+% Verificando se o gradiente analítico foi definido
+f = @(x) fObjConst(x);
+dfTest = gradFile(x0);
+if isempty(dfTest)
+    % Gradiente numérico
+    if nargin < 4 || isempty(h)
         df = @(x) grad(f,x);
     else
         df = @(x) grad(f,x,h);
     end
     numGrad = 1;
 else
+    % Gradiente analítico
+    df = @(x) gradFile(x);
     numGrad = 0;
 end
 
 % Definição das entradas padrão
-if nargin < 4 || isempty(tol)
+if nargin < 2 || isempty(tol)
     tol = 1e-5;
 end
 
-if nargin < 5 || isempty(theta)
+if nargin < 3 || isempty(theta)
     theta = 1;
 end
 
@@ -42,8 +67,9 @@ k = 1;
 nVal = 0;
 H = eye(n);
 global rp
-rp = 1;
+rp = rp0;
 
+% Implementação do processo de otimização
 while 1
     % Reduzir a dimensão do problema de otimização
     g = @(alfa) f(x0 - alfa*H*df(x0));
@@ -87,7 +113,7 @@ while 1
     % Atualizar variáveis para a próxima iteração
     x0 = x;
     k = k + 1;
-    rp = rp*10;
+    rp = rp*rpInc;
 end
 
 xOpt = x;
@@ -119,7 +145,7 @@ end
 % Implementação do Método da Seção Áurea ==================================
 % =========================================================================
 % =========================================================================
-function [xOpt, fOpt, k] = aureaSec(f,a,b,tol) 
+function [xOpt, fOpt, k] = aureaSec(f,a,b,tol)
 tal = 0.618;
 
 if nargin < 4
@@ -155,12 +181,54 @@ fOpt = f(xOpt);
 
 % =========================================================================
 % =========================================================================
+% Função para cálculo das penalidades =====================================
+% =========================================================================
+% =========================================================================
+function P = penalty(x)
+
+% Determinação dos valores atribuídos a cada uma das restrições
+[g, h] = constFile(x);
+
+% Determinação das penalidades
+Pg = sum(max(0,g).^2);
+Ph = sum(h.^2);
+
+% Cálculo das penalidades associadas tanto
+P = Pg + Ph;
+
+% =========================================================================
+% =========================================================================
 % Função objetivo penalizada ==============================================
 % =========================================================================
 % =========================================================================
 function F = fObjConst(x)
 
 global rp
+
+% Computação da função objetivo original
 fObj = funcFile(x);
-P = constFile(x);
+
+% Computação das penalidades
+P = penalty(x);
+
+% Computação da função objetivo penalizada
 F = fObj + rp*P;
+
+% =========================================================================
+% =========================================================================
+% Função para verificação da ordem do problema com base na função objetivo 
+% =========================================================================
+% =========================================================================
+function n = getOrder
+
+x = zeros(1,100);
+f0 = funcFile(x);
+for i = 1:100
+    x(i) = 1;
+    f = funcFile(x);
+    if f0 == f
+        break
+    end
+    x(i) = 0;
+end
+n = i - 1;
