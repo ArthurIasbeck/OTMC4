@@ -1,0 +1,419 @@
+\documentclass[12pt]{article}
+
+\input{/home/iasbeck/preamble.tex}
+
+\renewcommand{\headrulewidth}{0.5pt} % Redefine a espessura da lina no cabeçalho
+\lhead{Minimização de uma função restrita pela aplicação do MPE} % Lado esquerdo do cabeçalho
+\chead{} % Centro do cabeçalho
+\rhead{Arthur Iasbeck} % Lado direito  do cabeçalho
+\lfoot{} % Lado esquerdo do rodapé
+\cfoot{} % Centro do rodapé
+\rfoot{\thepage} % Lado direito  do rodapé
+
+% Folha A4
+% Margem superior = Margem esquerda = 3cm
+% Margem direita = Margem inferior = 2cm
+% Fonte Times New Roman 12
+% Títulos de Figuras e Tabelas Times New Roman 10
+% Espaçamento simples e alinhamento justificado
+
+% Início do documento
+\begin{document}
+	\singlespacing % Espaçamento simples
+	%\pagestyle{empty} % Remove numeração das páginas
+	
+	% Inserção da capa
+	\thispagestyle{empty}
+	\newgeometry{top=1.5cm, bottom=2cm, left=2cm, right=2cm} 
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=\linewidth]{cabecalho.png}
+	\end{figure}
+	
+	\begin{center}
+		\large
+		\textbf{UNIVERSIDADE FEDERAL DE UBERLÂNDIA} \\ \vspace{0.3cm}
+		\textbf{FACULDADE DE ENGENHARIA MECÂNICA} \\~\\~\\~\\~\\~\\~\\~\\
+		\Large
+		\textbf{MINIMIZAÇÃO DE UMA FUNÇÃO RESTRITA A PARTIR DA APLICAÇÃO DO MÉTODO DA PENALIDADE EXTERNA} \\~\\~\\~\\~\\~\\~\\
+		\large
+		\textbf{ARTHUR HENRIQUE IASBECK} \\~\\~\\~\\~\\~\\~\\~\\
+		\large
+		\textbf{UBERLÂNDIA} \\
+		\textbf{17 DE OUTUBRO DE 2019}
+	\end{center}
+	\newpage
+	\restoregeometry
+	
+	\setcounter{page}{1} % Impede que a capa seja contada na paginação
+	
+	\section{OBJETIVO}
+		Foi proposta no presenta trabalho a minimização de $ f(x) $, Eq. \ref{fObj},
+		\begin{equation}
+			f(x) = \frac{1}{3}(x_1 + 1)^3 + x_2
+			\label{fObj}
+		\end{equation}
+		
+		sujeita às seguintes restrições
+		\begin{gather}
+			-x_1 + 1 \leq 0 \\
+			-x_2 \leq 0
+		\end{gather}
+		
+	\section{METODOLOGIA}
+		Uma vez que o problema proposto contém restrições de desigualdade, é necessário realizar o tratamento das mesmas para que seja possível transformá-lo num problema irrestrito. Uma vez realizado este procedimento, é possível adotar métodos como o das Variáveis Métricas, o de Newton ou o da Máxima Descida, por exemplo, para obtenção da solução do problema irrestrito. 
+		
+		No presente trabalho adotou-se o Método da Penalidade Externa (MPE) para tratamento das restrições. Este mesmo consiste na definição de uma nova função objetivo $ \phi(x) $, Eq. \ref{fObjPen}, que inclui uma parcela de penalização que garante que $ f(x) \rightarrow \infty $ caso $ x $ não atenda as restrições. 
+		\begin{equation}
+			\label{fObjPen}
+			\phi(x) = f(x) + P(x)
+		\end{equation}
+		
+		No MPE defini-se a função $ P(x) $ da seguinte forma,
+		\begin{equation}
+			P(x) = r_p (\sum_{i = 1}^{m}(h_i(x))^2 + \sum_{j = 1}^{k} (max(0, g_j(x)))^2)
+		\end{equation}		 
+		
+		em que $ m $ e $ k $ representam respectivamente o número de restrições de igualdade e desigualdade, e $ r_p $ é um valor que tende a infinito com o passar das iterações. Observa-se que $ P(x) $ será maior que zero caso $ h_i(x) \neq 0 $ ou $ g_j(x) > 0 $ (o que faria, neste último caso, com que $ max(0, g_j(x)) = g_j(x)$). Para evitar problemas de ordem numérica, é necessário que o valor de $ r_p $ seja inicialmente pequeno e cresça à medida que evolui o processo de otimização, de forma a garantir que $ \phi(x^*) = f(x^*) $ sendo $ x^* $ uma solução que atenda às restrições de igualdade e desigualdade.
+		
+		Aplicando a definição de $ P(x) $ ao problema proposto obtém-se
+		\begin{equation}
+			\phi(x) = \frac{1}{3}(x_1 + 1)^3 + x_2 + r_p(max(0, -x_1 + 1)^2 + max(0, -x_2)^2)
+		\end{equation}  
+		
+		A determinação do mínimo de $ \phi(x) $ consiste num problema multi-dimensional irrestrito, ao qual foi aplicado o Método das Variáveis Métricas, que possibilita a redução da ordem do problema, que foi resolvido, em última instância, aplicando-se o Método da Seção Áurea. 
+		
+		A solução $ x^* $ foi obtida por meio do emprego de um código escrito no Matlab\textsuperscript{\textregistered}, que foi condensado na função
+		
+		\noindent \mcode{[xOpt, fOpt, nVal, k] = varMet(x0, theta, rp0, rpInc, tol, h)} \\
+		
+		\noindent em que 
+		\begin{itemize}
+			\item \mcode{xOpt}: Solução ótima obtida a partir da execução da função \mcode{varMet}.
+			\item \mcode{fOpt}: Valor de $ f(x^*) $.
+			\item \mcode{nVal}: Número de avaliações da função objetivo.
+			\item \mcode{k}: Número de iterações.
+			\item \mcode{x0}: Palpite inicial para a solução.
+			\item \mcode{theta}: Valor de $ \theta $ a ser utilizado na computação do Método das Variáveis Métricas.
+			\item \mcode{rp0}: Valor inicial de $ r_p $.
+			\item \mcode{rpInc}: Incremento de $ r_p $, que é redefinido a cada iteração como \mcode{rp = rp*rpInc}.
+			\item \mcode{tol}: Tolerância adotada para parada do algoritmo, que é executado até que a norma euclidiana entre $ x_{k+1} $ e $ x_k $ seja menor do que \mcode{tol}.
+			\item \mcode{h}: Incremento adotado na computação numérica do gradiente da função objetivo.
+ 		\end{itemize}
+ 
+ 		Juntamente à função \mcode{varMet}, foram definidas outras três funções denominadas \mcode{funcFile.m}, \mcode{gradFile.m} e \mcode{funcFile.m}, nas quais o usuário deveria inserir, respectivamente, a função objetivo, o seu gradiente (caso o mesmo possa ser obtido analiticamente) e as restrições de igualdade e desigualdade atribuídas ao problema. Se o gradiente da função objetivo não for informado pelo usuário, será adotada a computação numérica do mesmo. Cabe ressaltar que as restrições devem ser informadas em sua forma matricial, como mostrado a seguir.
+ 		
+ 		\begin{lstlisting}
+function [g, h] = constFile(x)
+
+% Cada linha da matriz 'g' representa uma restricao de desigualdade
+g = [-x(1) + 1
+     -x(2)];
+
+% Cada linha da matriz 'h' representa uma restricao de igualdade
+h = [];
+ 		\end{lstlisting}
+ 
+ 		\vspace{0.4cm}
+ 		Executando a função \mcode{varMet} considerando as entradas apresentadas na Tab. \ref{entradasVarMet}, foi obtido o resultado apresentado abaixo, condizente com a solução analítica esperada.
+ 		
+ 		\begin{lstlisting}
+x1* = 1.0000
+x2* = 0.0000
+f(x*) = 2.6667
+Numero de avaliacoes da funcao objetivo: 253
+Numero de iteracoes: 11
+ 		\end{lstlisting}
+ 		
+ 		\begin{table}[H]
+ 			\centering
+ 			\caption{Entradas atribuídas à função \mcode{varMet} para solução do problema de otimização proposto.}
+ 			\label{entradasVarMet}
+ 			\begin{tabular}{|c|c|}
+ 				\hline
+ 				\mcode{x0}    & $ [\begin{array}{ccc} 0 & 0 & 0 \end{array}] $ \\ \hline
+ 				\mcode{theta} & $1$       \\ \hline
+ 				\mcode{rp0}   & $1$       \\ \hline
+ 				\mcode{rpInc} & $10$      \\ \hline
+ 				\mcode{tol}   & $10^{-5}$   \\ \hline
+ 				\mcode{h}     & $10^{-10}$  \\ \hline
+ 			\end{tabular}
+ 		\end{table}
+ 		
+ 		Os códigos empregados na obtenção da solução apresentada são introduzidos a seguir e podem ser acessados no link \url{https://github.com/ArthurIasbeck/OTMC4}. 
+ 		
+ 		\begin{enumerate}
+ 			\item Definição da função objetivo (\mcode{funcFile.m}).
+ 			\begin{lstlisting}
+function fObj = funcFile(x)
+
+fObj = 1/3*(x(1) + 1)^3 + x(2);
+ 			\end{lstlisting}
+ 				
+ 			\item Definição do gradiente da função objetivo (\mcode{gradFile.m}).
+ 			\begin{lstlisting}
+%#ok<*INUSD>
+function df = gradFile(x)
+
+% O gradiente da funcao objetivo, quando conhecido, deve ser inserido aqui.
+% Caso o mesmo nao possa ser determinado, basta inserir 'df = []'.
+df = [];
+ 			\end{lstlisting}
+ 			
+ 			\item Definição das restrições do problemas (\mcode{constFile.m}).
+ 			\begin{lstlisting}
+function [g, h] = constFile(x)
+
+% Cada linha da matriz 'g' representa uma restricao de desigualdade
+g = [-x(1) + 1;
+     -x(2)];
+
+% Cada linha da matriz 'h' representa uma restricao de igualdade
+h = [];
+ 			\end{lstlisting}
+ 			
+ 			\item Código principal (\mcode{main.m})
+ 			\begin{lstlisting}
+% Configuracoes previas 
+% Antes de executar a funcao principal 'main.m', eh preciso definir a funcao objetivo, seu gradiente (caso haja), e as restricoes (caso haja). Para tanto basta editar os arquivos 'funcFile.m', 'gradFile.m', e 'constFile.m'
+
+clc; clear; close all;
+
+% Resolvendo o problema de otimizacao
+[xOpt, fOpt, nVal, k, alfaValues] = varMet();
+
+% Apresentando os resultados 
+for i = 1:length(xOpt)
+	fprintf(['x',num2str(i),'* = %.4f\n'], xOpt(i))
+end
+
+fprintf('f(x*) = %.4f\n', fOpt)
+fprintf('Numero de avaliacoes da funcao objetivo: %d\n', nVal)
+fprintf('Numero de iteracoes: %d\n', k)
+
+% Notas 
+% A seguir eh introduzida a forma completa da funcao 'varMet'
+% [xOpt, fOpt, nVal, k, alfaValues] = varMet(x0, theta, rp0, rpInc, tol, h)
+
+% Para os parametros nao informados pelo usuario serao adotados os valores padrao apresentados a seguir
+% x0 = [0 0 0 ... 0]
+% theta = 1
+% rp0 = 1
+% rpInc = 10
+% tol = 1e-5
+% h = 1e-10
+ 			\end{lstlisting}
+ 			
+ 			\item Implementação do Método das Variáveis Métricas (\mcode{varMet.m}).
+ 			\begin{lstlisting}
+% Implementacao do Metodo da Variavel Metrica
+function [xOpt, fOpt, nVal, k, alfaValues] = varMet(x0, theta, rp0, ...
+rpInc, tol, h)
+
+% Verificacao do palpite inicial fornecido pelo usuario
+n = getOrder;
+if nargin < 1 || isempty(x0)
+	x0 = zeros(n,1);
+else
+	% Verificando a consistencia entre x0 e a funcao objetivo
+	if n ~= length(x0)
+		error('O tamanho de x0 deve ser igual a ordem do problema.');
+	end
+end
+
+% Verificando entradas da funcao e definindo valores padrao
+if nargin < 2 || isempty(theta)
+	theta = 1;
+end
+if nargin < 3 || isempty(rp0)
+	rp0 = 1;
+end
+if nargin < 4 || isempty(rpInc)
+	rpInc = 10;
+end
+if nargin < 5 || isempty(tol)
+	tol = 1e-5;
+end
+if nargin < 6 || isempty(h)
+	h = 1e-10;
+end
+
+% Verificando se o gradiente analitico foi definido
+f = @(x) fObjConst(x);
+dfTest = gradFile(x0);
+if isempty(dfTest)
+	% Gradiente numerico
+	if nargin < 4 || isempty(h)
+		df = @(x) grad(f,x);
+	else
+		df = @(x) grad(f,x,h);
+	end
+	numGrad = 1;
+else
+	% Gradiente analitico
+	df = @(x) gradFile(x);
+	numGrad = 0;
+end
+
+% Definicao das entradas padrao
+if nargin < 2 || isempty(tol)
+	tol = 1e-5;
+end
+
+if nargin < 3 || isempty(theta)
+	theta = 1;
+end
+
+% Variaveis para controle de execucao
+n = length(x0);
+alfaValues = zeros(1,1);
+k = 1;
+nVal = 0;
+H = eye(n);
+global rp
+rp = rp0;
+
+% Implementacao do processo de otimizacao
+while 1
+	% Reduzir a dimensao do problema de otimizacao
+	g = @(alfa) f(x0 - alfa*H*df(x0));
+	
+	% Resolver o problema de otimizacao uni-dimensional
+	[alfaOpt, gOpt, nVal1] = aureaSec(g,-1,1,1e-4);
+	
+	% Atualizar a solucao otima
+	x = x0 - alfaOpt*H*df(x0);
+	
+	% Armazenar dados de execucao
+	alfaValues(k) = alfaOpt;
+	if numGrad
+		nVal = nVal + nVal1 + 1;
+	else
+		nVal = nVal + nVal1 + 2*n;
+	end
+	
+	% OBS : Lembre-se que eh necessaria a computacao do gradiente para atualizacao de x. No entanto, se estivermos utilizando a aproximacao numerica para o gradiente, a computacao do mesmo levara, neste caso a mais avaliacoes da funcao objetivo.
+	
+	% Verificar a condicao de parada
+	cp = norm(x - x0);
+	if cp < tol
+		break;
+	end
+	
+	% Atualizacao de H (aproximacao para a inversa da Matriz Hessiana)
+	p = x - x0;
+	y = df(x) - df(x0);
+	sigma = p'*y;
+	tal = y'*H*y;
+	D = ((sigma + theta*tal)/sigma^2)*(p*p') ...
+	+ ((theta - 1)/tal)*(H*y)*(H*y)' ...
+	- (theta/sigma)*(H*y*p' + p*(H*y)');
+	
+	H = H + D;
+	
+	% Atualizar variaveis para a proxima iteracao
+	x0 = x;
+	k = k + 1;
+	rp = rp*rpInc;
+end
+
+xOpt = x;
+fOpt = f(xOpt);
+
+% Obtencao numerica do gradiente
+function df = grad(f, x, h)
+
+% Definindo valores padrao
+if nargin < 3
+	h = 1e-10;
+end
+
+n = length(x);
+
+df = zeros(n,1);
+for i = 1:n
+	dx = x;
+	dx(i) = dx(i) + h;
+	df(i) = (f(dx) - f(x))/h;
+end
+
+% Implementacao do Metodo da Secao Aurea
+function [xOpt, fOpt, k] = aureaSec(f,a,b,tol)
+	tal = 0.618;
+	
+	if nargin < 4
+		tol = 1e-8;
+	end
+	
+	alfa = a + (1 - tal)*(b - a);
+	beta = a + tal*(b - a);
+	fAlfa = f(alfa);
+	fBeta = f(beta);
+	
+	k = 1;
+	
+	while abs(a-b) > tol
+		if fBeta < fAlfa
+			a = alfa;
+			alfa = beta;
+			fAlfa = fBeta;
+			beta = a + tal*(b - a);
+			fBeta = f(beta);
+		elseif fAlfa <= fBeta
+			b = beta;
+			beta = alfa;
+			fBeta = fAlfa;
+			alfa = a + (1 - tal)*(b - a);
+			fAlfa = f(alfa);
+		end
+		k = k + 1;
+	end
+	
+	xOpt = (alfa+beta)/2;
+	fOpt = f(xOpt);
+
+% Funcao para calculo das penalidades
+function P = penalty(x)
+
+% Determinacao dos valores atribuidos a cada uma das restricoes
+[g, h] = constFile(x);
+
+% Determinacao das penalidades
+Pg = sum(max(0,g).^2);
+Ph = sum(h.^2);
+
+% Calculo das penalidades
+P = Pg + Ph;
+
+% Funcao objetivo penalizada
+function F = fObjConst(x)
+
+global rp
+
+% Computacao da funcao objetivo original
+fObj = funcFile(x);
+
+% Computacao das penalidades
+P = penalty(x);
+
+% Computacao da funcao objetivo penalizada
+F = fObj + rp*P;
+
+% Funcao para verificacao da ordem do problema com base na funcao objetivo
+function n = getOrder
+
+x = zeros(1,100);
+f0 = funcFile(x);
+for i = 1:100
+	x(i) = 1;
+	f = funcFile(x);
+	if f0 == f
+		break
+	end
+	x(i) = 0;
+end
+n = i - 1;
+ 			\end{lstlisting}
+ 		\end{enumerate}
+\end{document}

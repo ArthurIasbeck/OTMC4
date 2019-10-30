@@ -1,0 +1,6 @@
+\mcode{x0};$[0 0 0]$
+\mcode{theta};$1$
+\mcode{rp0};$1$
+\mcode{rpInc};$10$
+\mcode{tol};$10^-5$
+\mcode{h};$10^-10$

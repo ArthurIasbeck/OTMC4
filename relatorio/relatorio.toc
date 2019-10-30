@@ -1,0 +1,5 @@
+\babel@toc {brazil}{}
+\contentsline {section}{\numberline {1}INTRODU\IeC {\c C}\IeC {\~A}O}{1}{section.1}% 
+\contentsline {section}{\numberline {2}CONDI\IeC {\c C}\IeC {\~O}ES DE OTIMALIDADE}{1}{section.2}% 
+\contentsline {section}{\numberline {3}COMPUTA\IeC {\c C}\IeC {\~A}O DE $\pmb {x_1^*}$ E $\pmb {x_2^*}$}{2}{section.3}% 
+\contentsline {section}{\numberline {4}CONCLUS\IeC {\~O}ES}{5}{section.4}% 
