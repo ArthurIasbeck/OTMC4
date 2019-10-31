@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (MiKTeX 2.9.7230) (preloaded format=pdflatex 2019.10.20)  30 OCT 2019 18:36
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (MiKTeX 2.9.7230) (preloaded format=pdflatex 2019.10.20)  31 OCT 2019 18:54
 entering extended mode
 **./relatorio.tex
 (relatorio.tex
@@ -815,8 +815,8 @@ pdfTeX warning (ext4): destination with the same identifier (name{page.1}) has
 been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.90 		
-        [1
+l.91 		\noindent
+                 em que [1
 
 ]
 Overfull \hbox (20.94609pt too wide) in paragraph at lines 105--106
@@ -830,24 +830,24 @@ LaTeX Font Info:    Trying to load font information for TS1+pcr on input line 1
 File: ts1pcr.fd 2001/06/04 font definitions for TS1/pcr.
 ) [2] [3] [4] [5]
 [6] [7]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 419.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 417.
  [8]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 419.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 417.
  (relatorio.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 419.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 419.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 417.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 417.
 Package rerunfilecheck Info: File `relatorio.out' has not changed.
 (rerunfilecheck)             Checksum: CE50CAB7E2F4F0246D9A6CC36EC5F4D1;89.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 419.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 417.
  ) 
 Here is how much of TeX's memory you used:
- 12666 strings out of 492454
- 178710 string characters out of 3128990
- 376305 words of memory out of 3000000
+ 12664 strings out of 492454
+ 178682 string characters out of 3128990
+ 374305 words of memory out of 3000000
  16532 multiletter control sequences out of 15000+200000
  33717 words of font info for 65 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
- 41i,16n,47p,658b,1961s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 41i,16n,47p,668b,1961s stack positions out of 5000i,500n,10000p,200000b,50000s
 {/usr/local/share/miktex-texmf/fonts/enc/dvips/base/8r.enc}</usr/local/share/
 miktex-texmf/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/local/share/miktex
 -texmf/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/local/share/miktex-texmf
@@ -860,9 +860,9 @@ m/cmsy10.pfb></usr/local/share/miktex-texmf/fonts/type1/public/amsfonts/cm/cmsy
 /usr/local/share/miktex-texmf/fonts/type1/urw/courier/ucrr8a.pfb></usr/local/sh
 are/miktex-texmf/fonts/type1/urw/times/utmb8a.pfb></usr/local/share/miktex-texm
 f/fonts/type1/urw/times/utmr8a.pfb>
-Output written on relatorio.pdf (9 pages, 384956 bytes).
+Output written on relatorio.pdf (9 pages, 385231 bytes).
 PDF statistics:
- 455 PDF objects out of 1000 (max. 8388607)
- 296 named destinations out of 1000 (max. 500000)
+ 452 PDF objects out of 1000 (max. 8388607)
+ 294 named destinations out of 1000 (max. 500000)
  22 words of extra memory for PDF output out of 10000 (max. 10000000)
 

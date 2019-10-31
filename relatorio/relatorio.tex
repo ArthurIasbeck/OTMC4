@@ -41,7 +41,7 @@
 		\textbf{ARTHUR HENRIQUE IASBECK} \\~\\~\\~\\~\\~\\~\\~\\
 		\large
 		\textbf{UBERLÂNDIA} \\
-		\textbf{17 DE OUTUBRO DE 2019}
+		\textbf{31 DE OUTUBRO DE 2019}
 	\end{center}
 	\newpage
 	\restoregeometry
@@ -49,7 +49,7 @@
 	\setcounter{page}{1} % Impede que a capa seja contada na paginação
 	
 	\section{OBJETIVO}
-		Foi proposta no presenta trabalho a minimização de $ f(x) $, Eq. \ref{fObj},
+		Foi proposta no presenta trabalho a minimização da função $ f(x) $, Eq. \ref{fObj},
 		\begin{equation}
 			f(x) = \frac{1}{3}(x_1 + 1)^3 + x_2
 			\label{fObj}
@@ -62,27 +62,27 @@
 		\end{gather}
 		
 	\section{METODOLOGIA}
-		Uma vez que o problema proposto contém restrições de desigualdade, é necessário realizar o tratamento das mesmas para que seja possível transformá-lo num problema irrestrito. Uma vez realizado este procedimento, é possível adotar métodos como o das Variáveis Métricas, o de Newton ou o da Máxima Descida, por exemplo, para obtenção da solução do problema irrestrito. 
+		Uma vez que o problema proposto contém restrições de desigualdade, é necessário tratá-las de forma a transformá-lo num problema irrestrito, de forma que seja possível empregar métodos como o das Variáveis Métricas, o de Newton ou o da Máxima Descida, por exemplo, para obtenção da solução. 
 		
-		No presente trabalho adotou-se o Método da Penalidade Externa (MPE) para tratamento das restrições. Este mesmo consiste na definição de uma nova função objetivo $ \phi(x) $, Eq. \ref{fObjPen}, que inclui uma parcela de penalização que garante que $ f(x) \rightarrow \infty $ caso $ x $ não atenda as restrições. 
+		No presente trabalho adotou-se o Método da Penalidade Externa (MPE) para tratamento das restrições. Este método se baseia na definição de uma nova função objetivo $ \phi(x) $, Eq. \ref{fObjPen}, que inclui uma parcela de penalização que garante que $ f(x) \rightarrow \infty $ caso $ x $ não atenda as restrições. 
 		\begin{equation}
 			\label{fObjPen}
 			\phi(x) = f(x) + P(x)
 		\end{equation}
 		
-		No MPE defini-se a função $ P(x) $ da seguinte forma,
+		No MPE defini-se a função $ P(x) $ da seguinte forma
 		\begin{equation}
 			P(x) = r_p (\sum_{i = 1}^{m}(h_i(x))^2 + \sum_{j = 1}^{k} (max(0, g_j(x)))^2)
 		\end{equation}		 
 		
-		em que $ m $ e $ k $ representam respectivamente o número de restrições de igualdade e desigualdade, e $ r_p $ é um valor que tende a infinito com o passar das iterações. Observa-se que $ P(x) $ será maior que zero caso $ h_i(x) \neq 0 $ ou $ g_j(x) > 0 $ (o que faria, neste último caso, com que $ max(0, g_j(x)) = g_j(x)$). Para evitar problemas de ordem numérica, é necessário que o valor de $ r_p $ seja inicialmente pequeno e cresça à medida que evolui o processo de otimização, de forma a garantir que $ \phi(x^*) = f(x^*) $ sendo $ x^* $ uma solução que atenda às restrições de igualdade e desigualdade.
+		\noindent em que $ m $ e $ k $ representam respectivamente o número de restrições de igualdade e desigualdade, e $ r_p $ é um valor que tende a infinito com o passar das iterações. Observa-se que $ P(x) $ será maior que zero caso $ h_i(x) \neq 0 $ ou $ g_j(x) > 0 $ (o que faria, neste último caso, com que $ max(0, g_j(x)) = g_j(x)$). Para evitar problemas de ordem numérica, é necessário que o valor de $ r_p $ seja inicialmente pequeno e cresça à medida que evolui o processo de otimização, de forma a garantir que $ \phi(x^*) = f(x^*) $ sendo $ x^* $ uma solução que atenda às restrições de igualdade e desigualdade.
 		
 		Aplicando a definição de $ P(x) $ ao problema proposto obtém-se
 		\begin{equation}
 			\phi(x) = \frac{1}{3}(x_1 + 1)^3 + x_2 + r_p(max(0, -x_1 + 1)^2 + max(0, -x_2)^2)
 		\end{equation}  
 		
-		A determinação do mínimo de $ \phi(x) $ consiste num problema multi-dimensional irrestrito, ao qual foi aplicado o Método das Variáveis Métricas, que possibilita a redução da ordem do problema, que foi resolvido, em última instância, aplicando-se o Método da Seção Áurea. 
+		A determinação do mínimo de $ \phi(x) $ consiste num problema multi-dimensional irrestrito, ao qual foi aplicado o Método das Variáveis Métricas. Uma vez reduzida a ordem do problema, o mesmo pôde ser resolvido, em última instância, aplicando-se o Método da Seção Áurea. 
 		
 		A solução $ x^* $ foi obtida por meio do emprego de um código escrito no Matlab\textsuperscript{\textregistered}, que foi condensado na função
 		
@@ -98,11 +98,11 @@
 			\item \mcode{theta}: Valor de $ \theta $ a ser utilizado na computação do Método das Variáveis Métricas.
 			\item \mcode{rp0}: Valor inicial de $ r_p $.
 			\item \mcode{rpInc}: Incremento de $ r_p $, que é redefinido a cada iteração como \mcode{rp = rp*rpInc}.
-			\item \mcode{tol}: Tolerância adotada para parada do algoritmo, que é executado até que a norma euclidiana entre $ x_{k+1} $ e $ x_k $ seja menor do que \mcode{tol}.
+			\item \mcode{tol}: Tolerância adotada para o critério de parada, que é executado até que a norma euclidiana entre $ x_{k+1} $ e $ x_k $ seja menor do que \mcode{tol}.
 			\item \mcode{h}: Incremento adotado na computação numérica do gradiente da função objetivo.
  		\end{itemize}
  
- 		Juntamente à função \mcode{varMet}, foram definidas outras três funções denominadas \mcode{funcFile.m}, \mcode{gradFile.m} e \mcode{funcFile.m}, nas quais o usuário deveria inserir, respectivamente, a função objetivo, o seu gradiente (caso o mesmo possa ser obtido analiticamente) e as restrições de igualdade e desigualdade atribuídas ao problema. Se o gradiente da função objetivo não for informado pelo usuário, será adotada a computação numérica do mesmo. Cabe ressaltar que as restrições devem ser informadas em sua forma matricial, como mostrado a seguir.
+ 		Juntamente à função \mcode{varMet}, foram definidas outras três funções denominadas \mcode{funcFile.m}, \mcode{gradFile.m} e \mcode{funcFile.m}, nas quais o usuário deveria inserir, respectivamente, a função objetivo, o seu gradiente (caso o mesmo pudesse ser determinado analiticamente) e as restrições de igualdade e desigualdade atribuídas ao problema. Se o gradiente da função objetivo não for informado pelo usuário, será adotada a computação numérica do mesmo. Cabe ressaltar que as restrições devem ser informadas em sua forma matricial, como mostrado a seguir.
  		
  		\begin{lstlisting}
 function [g, h] = constFile(x)
@@ -153,11 +153,9 @@ fObj = 1/3*(x(1) + 1)^3 + x(2);
  				
  			\item Definição do gradiente da função objetivo (\mcode{gradFile.m}).
  			\begin{lstlisting}
-%#ok<*INUSD>
 function df = gradFile(x)
 
-% O gradiente da funcao objetivo, quando conhecido, deve ser inserido aqui.
-% Caso o mesmo nao possa ser determinado, basta inserir 'df = []'.
+% O gradiente da funcao objetivo, quando conhecido, deve ser inserido aqui. Caso o mesmo nao possa ser determinado, basta inserir 'df = []'.
 df = [];
  			\end{lstlisting}
  			
@@ -205,7 +203,7 @@ fprintf('Numero de iteracoes: %d\n', k)
 % h = 1e-10
  			\end{lstlisting}
  			
- 			\item Implementação do Método das Variáveis Métricas (\mcode{varMet.m}).
+ 			\item Implementação do Método das Variáveis Métricas e das demais função utilizadas na computação do mesmo (\mcode{varMet.m}).
  			\begin{lstlisting}
 % Implementacao do Metodo da Variavel Metrica
 function [xOpt, fOpt, nVal, k, alfaValues] = varMet(x0, theta, rp0, ...
